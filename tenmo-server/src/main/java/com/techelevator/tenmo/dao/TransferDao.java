@@ -10,5 +10,8 @@ public interface TransferDao {
     void transfer(Transfer transfer);
     List<Transfer> listOfTransfers(int accountId);
     Transfer getTransferDetails(int transferId);
+    List<Transfer> listOfPendingTransfers(int accountId);
+    void updatePendingTransfer(Transfer transfer);
+
 
 }

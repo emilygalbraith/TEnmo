@@ -28,14 +28,39 @@ public class JdbcTransferDao implements TransferDao {
     }
 
     @Override
+    public void updatePendingTransfer(Transfer transfer) {
+        int transferId = transfer.getTransferId();
+        int transferStatusId = transfer.getTransferStatusId();
+        BigDecimal amount = transfer.getAmount();
+        String sql = "UPDATE transfers SET transfer_status_id = ? WHERE transfer_id = ?";
+        jdbcTemplate.update(sql, transferStatusId, transferId);
+    }
+
+    @Override
     public List<Transfer> listOfTransfers(int accountId) {
         List<Transfer> transferList = new ArrayList<>();
         String sql = "SELECT * FROM transfers WHERE account_from = ?";
+        String sql2 = "SELECT * FROM transfers WHERE account_to = ? AND transfer_type_id = 1";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, accountId);
         while(result.next()){
             transferList.add(mapToTransfer(result));
         }
+        SqlRowSet result2 = jdbcTemplate.queryForRowSet(sql2, accountId);
+        while(result2.next()) {
+            transferList.add(mapToTransfer(result));
+        }
         return transferList;
+    }
+
+    @Override
+    public List<Transfer> listOfPendingTransfers(int accountId) {
+        List<Transfer> pendingTransferList = new ArrayList<>();
+        String sql = "SELECT * FROM transfers WHERE account_from = ? AND transfer_status_id = 1";
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, accountId);
+        while(result.next()){
+            pendingTransferList.add(mapToTransfer(result));
+        }
+        return pendingTransferList;
     }
 
     @Override
