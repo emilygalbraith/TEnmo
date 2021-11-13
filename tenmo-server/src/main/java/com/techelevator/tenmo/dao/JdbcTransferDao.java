@@ -16,9 +16,6 @@ public class JdbcTransferDao implements TransferDao {
 
     public JdbcTransferDao(JdbcTemplate jdbcTemplate) { this.jdbcTemplate = jdbcTemplate;  }
 
-
-
-
     @Override
     public void transfer(Transfer transfer) {
         int fromAccount = transfer.getAccountFrom();
