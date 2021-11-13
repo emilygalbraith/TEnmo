@@ -1,8 +1,6 @@
 package com.techelevator.tenmo.Service;
 
-import com.techelevator.tenmo.dao.AccountDao;
-import com.techelevator.tenmo.dao.TransferDao;
-import com.techelevator.tenmo.dao.UserDao;
+import com.techelevator.tenmo.dao.*;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import org.springframework.stereotype.Service;
@@ -16,13 +14,18 @@ public class TellerService {
     private AccountDao accountDao;
     private TransferDao transferDao;
     private UserDao userDao;
+    private TransferStatusDao transferStatusDao;
+    private TransferTypeDao transferTypeDao;
     private static final int APPROVED_STATUS = 2;
     private static final int REJECTED_STATUS = 3;
 
-    public TellerService(AccountDao accountDao, TransferDao transferDao, UserDao userDao) {
+    public TellerService(AccountDao accountDao, TransferDao transferDao, UserDao userDao, TransferTypeDao transferTypeDao,
+                         TransferStatusDao transferStatusDao) {
         this.accountDao = accountDao;
         this.transferDao = transferDao;
         this.userDao = userDao;
+        this.transferTypeDao = transferTypeDao;
+        this.transferStatusDao = transferStatusDao;
     }
 
     public int getAccountId(int userId) {
@@ -94,5 +97,13 @@ public class TellerService {
         BigDecimal zero = BigDecimal.valueOf(0);
         boolean isSufficient = accountFromBalance.subtract(amount).compareTo(zero) >= 0;
         return isSufficient;
+    }
+
+    public String getTransferStatusDesc(int transferStatusId) {
+        return transferStatusDao.getTransferStatusDesc(transferStatusId);
+    }
+
+    public String getTransferTypeDesc(int transferTypeId) {
+        return transferTypeDao.getTransferTypeDesc(transferTypeId);
     }
 }
