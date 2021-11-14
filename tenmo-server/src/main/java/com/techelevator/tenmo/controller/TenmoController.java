@@ -21,6 +21,9 @@ public class TenmoController {
         this.tellerService = tellerService;
     }
 
+    @RequestMapping(path = "users/{accountId}", method = RequestMethod.GET)
+    public String getUsername(@PathVariable int accountId) { return tellerService.getUsername(accountId); }
+
     @RequestMapping(path = "accounts/{userId}", method = RequestMethod.GET)
     public int getAccountId(@PathVariable int userId) {
         return tellerService.getAccountId(userId);
@@ -39,6 +42,11 @@ public class TenmoController {
     @RequestMapping(path = "transfer/list/{accountId}", method = RequestMethod.GET)
     public List<Transfer> getTransferList(@PathVariable int accountId) {
         return tellerService.getTransferList(accountId);
+    }
+
+    @RequestMapping(path = "transfers/pending/{accountId}", method = RequestMethod.GET)
+    public List<Transfer> getPendingTransferList(@PathVariable int accountId) {
+        return tellerService.getPendingTransferList(accountId);
     }
 
     @RequestMapping(path = "transfer/{transferId}", method = RequestMethod.GET)

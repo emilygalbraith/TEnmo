@@ -28,6 +28,8 @@ public class TellerService {
         this.transferStatusDao = transferStatusDao;
     }
 
+    public String getUsername(int accountId) { return userDao.getUsername(accountId); }
+
     public int getAccountId(int userId) {
         return accountDao.findByUserId(userId);
     }
@@ -59,6 +61,8 @@ public class TellerService {
     public List<Transfer> getTransferList(int accountId) {
         return transferDao.listOfTransfers(accountId);
     }
+
+    public List<Transfer> getPendingTransferList(int accountId) { return transferDao.listOfPendingTransfers(accountId); }
 
     public Transfer getTransferDetails(int transferId) {
         return transferDao.getTransferDetails(transferId);

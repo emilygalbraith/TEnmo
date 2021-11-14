@@ -3,6 +3,8 @@ package com.techelevator.view;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
+import com.techelevator.tenmo.services.TEnmoService;
+import com.techelevator.tenmo.services.ValidaterService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -148,7 +150,7 @@ public class ConsoleServiceTest {
 
 	private ConsoleService getServiceForTestingWithUserInput(String userInput) {
 		ByteArrayInputStream input = new ByteArrayInputStream(String.valueOf(userInput).getBytes());
-		return new ConsoleService(input, output);
+		return new ConsoleService(input, output, new TEnmoService(), new ValidaterService());
 	}
 
 	private ConsoleService getServiceForTesting() {
