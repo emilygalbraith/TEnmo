@@ -142,10 +142,14 @@ public class ConsoleService {
 				"-------------------------------------------\n");
 		List<Transfer> transferList = tenmoService.getTransferList(currentUserId);
 		for (Transfer transfer: transferList) {
-			System.out.println(String.format("%d To: %s $ %s", transfer.getTransferId(), tenmoService.getUsername(transfer.getAccountTo()), transfer.getAmount().toString()));
+			if (transfer.getTransferIdType() == 1) {
+				System.out.println(String.format("%d From: %s $ %s", transfer.getTransferId(),
+						tenmoService.getUsername(transfer.getAccountFrom()), transfer.getAmount().toString()));
+			}
+			System.out.println(String.format("%d To: %s $ %s", transfer.getTransferId(),
+					tenmoService.getUsername(transfer.getAccountTo()), transfer.getAmount().toString()));
 		}
-
-		}
+	}
 
 	public void getTransferList() {
 		User user = tenmoService.getCurrentUser().getUser();
