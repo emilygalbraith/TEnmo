@@ -41,7 +41,8 @@ public class TenmoController {
 
     @RequestMapping(path = "transfer/list/{accountId}", method = RequestMethod.GET)
     public List<Transfer> getTransferList(@PathVariable int accountId) {
-        return tellerService.getTransferList(accountId);
+        List<Transfer> transferList = tellerService.getTransferList(accountId);
+        return transferList;
     }
 
     @RequestMapping(path = "transfers/pending/{accountId}", method = RequestMethod.GET)

@@ -75,7 +75,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void viewTransferHistory() {
-		console.getTransferList();
+		console.getTransferDetails();
 		
 	}
 

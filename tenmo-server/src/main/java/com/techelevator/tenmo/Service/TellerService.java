@@ -93,11 +93,8 @@ public class TellerService {
 
     public boolean isBalanceSufficient(Transfer transfer) {
         int accountFrom = transfer.getAccountFrom();
-        int accountTo = transfer.getAccountTo();
         BigDecimal amount = transfer.getAmount();
-        int transferTypeId = transfer.getTransferIdType();
         BigDecimal accountFromBalance = accountDao.getBalance(accountFrom);
-        BigDecimal accountToBalance = accountDao.getBalance(accountTo);
         BigDecimal zero = BigDecimal.valueOf(0);
         boolean isSufficient = accountFromBalance.subtract(amount).compareTo(zero) >= 0;
         return isSufficient;

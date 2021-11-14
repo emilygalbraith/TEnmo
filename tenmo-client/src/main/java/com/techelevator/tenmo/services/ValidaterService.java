@@ -9,8 +9,7 @@ import java.util.List;
 @Service
 public class ValidaterService {
 
-    public boolean isValidUserId(int userId) {
-        TEnmoService tenmoService = new TEnmoService();
+    public boolean isValidUserId(int userId, TEnmoService tenmoService) {
         List<User> userList = tenmoService.getUserList();
         boolean isValid = false;
         for (User user : userList) {
@@ -21,9 +20,8 @@ public class ValidaterService {
         return isValid;
     }
 
-    public boolean isValidTransferId(int userId, int transferId) {
-        TEnmoService tEnmoService = new TEnmoService();
-        List<Transfer> usersTransferList = tEnmoService.getTransferList(userId);
+    public boolean isValidTransferId(int userId, int transferId, TEnmoService tenmoService) {
+        List<Transfer> usersTransferList = tenmoService.getTransferList(tenmoService.getAccountId(userId));
         boolean isContained = false;
         for (Transfer transfer: usersTransferList) {
             if (transfer.getTransferId() == transferId) {

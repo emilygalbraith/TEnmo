@@ -31,7 +31,6 @@ public class JdbcTransferDao implements TransferDao {
     public void updatePendingTransfer(Transfer transfer) {
         int transferId = transfer.getTransferId();
         int transferStatusId = transfer.getTransferStatusId();
-        BigDecimal amount = transfer.getAmount();
         String sql = "UPDATE transfers SET transfer_status_id = ? WHERE transfer_id = ?";
         jdbcTemplate.update(sql, transferStatusId, transferId);
     }
@@ -47,7 +46,7 @@ public class JdbcTransferDao implements TransferDao {
         }
         SqlRowSet result2 = jdbcTemplate.queryForRowSet(sql2, accountId);
         while(result2.next()) {
-            transferList.add(mapToTransfer(result));
+            transferList.add(mapToTransfer(result2));
         }
         return transferList;
     }

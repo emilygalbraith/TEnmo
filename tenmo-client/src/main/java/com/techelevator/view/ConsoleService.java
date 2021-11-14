@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -103,7 +102,7 @@ public class ConsoleService {
 
 		for (int i = 0; i < userList.size(); i++) {
 			User user = userList.get(i);
-			String userInfo = String.format("%d				%s", user.getId(), user.getUsername());
+			String userInfo = String.format("%d			%s", user.getId(), user.getUsername());
 			System.out.println(userInfo);
 		}
 	}
@@ -116,7 +115,7 @@ public class ConsoleService {
 		Transfer transfer = new Transfer();
 		if(!userInput.equals("0")) {
 			int toUserId = Integer.parseInt(userInput);
-			boolean isValid = validaterService.isValidUserId(toUserId);
+			boolean isValid = validaterService.isValidUserId(toUserId, tenmoService);
 			if (isValid) {
 				transfer.setAccountTo(tenmoService.getAccountId(toUserId));
 				transfer.setAccountFrom(tenmoService.getAccountId(currentUserId));
@@ -133,25 +132,21 @@ public class ConsoleService {
 		}
 	}
 
-	//TODO make sure that pending request display correctly
 	public void displayTransferList() {
 		int currentUserId = tenmoService.getCurrentUser().getUser().getId();
 		System.out.println("-------------------------------------------\n" +
 				"Transfers\n" +
-				"ID From/To Amount\n" +
-				"-------------------------------------------\n");
-		List<Transfer> transferList = tenmoService.getTransferList(currentUserId);
+				"ID 	Type		From/To 	Amount\n" +
+				"-------------------------------------------");
+		List<Transfer> transferList = tenmoService.getTransferList(tenmoService.getAccountId(currentUserId));
 		for (Transfer transfer: transferList) {
-			if (transfer.getTransferIdType() == 1) {
-				System.out.println(String.format("%d From: %s $ %s", transfer.getTransferId(),
-						tenmoService.getUsername(transfer.getAccountFrom()), transfer.getAmount().toString()));
-			}
-			System.out.println(String.format("%d To: %s $ %s", transfer.getTransferId(),
-					tenmoService.getUsername(transfer.getAccountTo()), transfer.getAmount().toString()));
+				System.out.println(String.format("%d	%s 		To: %s 	$ %s", transfer.getTransferId(),
+						tenmoService.getTransferTypeDesc(transfer.getTransferIdType()),
+						tenmoService.getUsername(transfer.getAccountTo()), transfer.getAmount().toString()));
 		}
 	}
 
-	public void getTransferList() {
+	public void getTransferDetails() {
 		User user = tenmoService.getCurrentUser().getUser();
 		int currentUserId = user.getId();
 		displayTransferList();
@@ -159,24 +154,25 @@ public class ConsoleService {
 		String userInput = in.nextLine();
 		if(!userInput.equals("0")) {
 			int transferId = Integer.parseInt(userInput);
-			boolean isContained = validaterService.isValidTransferId(currentUserId, transferId);
+			boolean isContained = validaterService.isValidTransferId(currentUserId, transferId, tenmoService);
 			Transfer transfer = tenmoService.getTransferDetails(transferId);
 			if (transfer != null && isContained) {
 				System.out.println("--------------------------------------------\n" +
 						"Transfer Details\n" +
-						"--------------------------------------------\n");
+						"--------------------------------------------");
 				System.out.println(String.format(" Id: %d\n" +
 								" From: %s\n" +
 								" To: %s\n" +
 								" Type: %s\n" +
 								" Status: %s\n" +
-								" Amount: $%s\n----------------------", transfer.getTransferId(), user.getUsername(),
+								" Amount: $%s\n----------------------", transfer.getTransferId(),
+						tenmoService.getUsername(transfer.getAccountFrom()),
 						tenmoService.getUsername(transfer.getAccountTo()), tenmoService.getTransferTypeDesc(transfer.getTransferIdType()),
 						tenmoService.getTransferStatusDesc(transfer.getTransferStatusId()), transfer.getAmount().toString()));
 			}
 			else {
 				System.out.println("You have entered an invalid transfer Id.");
-				getTransferList();
+				getTransferDetails();
 			}
 		}
 	}
@@ -189,7 +185,7 @@ public class ConsoleService {
 		Transfer transfer = new Transfer();
 		if(!userInput.equals("0")) {
 			int fromUserId = Integer.parseInt(userInput);
-			boolean isValid = validaterService.isValidUserId(fromUserId);
+			boolean isValid = validaterService.isValidUserId(fromUserId, tenmoService);
 			if (isValid) {
 				transfer.setAccountTo(tenmoService.getAccountId(currentUserId));
 				transfer.setAccountFrom(tenmoService.getAccountId(fromUserId));
@@ -211,7 +207,7 @@ public class ConsoleService {
 		System.out.println("-------------------------------------------\n" +
 				"Pending Transfers\n" +
 				"ID		To		Amount\n" +
-				"-------------------------------------------\n");
+				"-------------------------------------------");
 		List<Transfer> pendingTransferList = tenmoService.getPendingTransferList(tenmoService.getAccountId(currentUserId));
 		for (Transfer transfer: pendingTransferList) {
 			System.out.println(String.format("%d		%s		$ %s", transfer.getTransferId(),
@@ -226,7 +222,7 @@ public class ConsoleService {
 		String userInput = in.nextLine();
 		if (!userInput.equals("0")) {
 			int transferId = Integer.parseInt(userInput);
-			boolean isValid = validaterService.isValidTransferId(currentUserId, transferId);
+			boolean isValid = validaterService.isValidTransferId(currentUserId, transferId, tenmoService);
 			if (isValid) {
 				Transfer transfer = tenmoService.getTransferDetails(transferId);
 				System.out.println("1: Approve \n2: Reject \n0: Don't approve or reject \n---------\nPlease choose an option:");
