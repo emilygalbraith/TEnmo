@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
@@ -26,75 +28,139 @@ public class TEnmoService {
     public AuthenticatedUser getCurrentUser() { return currentUser; }
 
     public String getUsername(int accountId) {
-        ResponseEntity<String> response = restTemplate.exchange(API_BASE_URL + "users/" + accountId, HttpMethod.GET,
-                authEntity(), String.class);
-        return response.getBody();
+        String userName = "";
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(API_BASE_URL + "users/" + accountId, HttpMethod.GET,
+                    authEntity(), String.class);
+            userName = response.getBody();
+        } catch(RestClientResponseException | ResourceAccessException e) {
+            System.out.println(e.getMessage());
+        }
+        return userName;
     }
 
     public int getAccountId(int userId) {
-        ResponseEntity<Integer> response = restTemplate.exchange(API_BASE_URL + "accounts/" + userId,
-                HttpMethod.GET, authEntity(), Integer.class);
-        return response.getBody();
+        int accountId = 0;
+        try {
+            ResponseEntity<Integer> response = restTemplate.exchange(API_BASE_URL + "accounts/" + userId,
+                    HttpMethod.GET, authEntity(), Integer.class);
+            accountId = response.getBody();
+        } catch(RestClientResponseException | ResourceAccessException e) {
+            System.out.println(e.getMessage());
+        }
+        return accountId;
     }
 
     public BigDecimal getBalance(int accountId) {
-        ResponseEntity<BigDecimal> response = restTemplate.exchange(API_BASE_URL + "accounts/balance/" + accountId,
-                HttpMethod.GET, authEntity(), BigDecimal.class);
-        return response.getBody();
+        BigDecimal balance = new BigDecimal(0);
+        try {
+            ResponseEntity<BigDecimal> response = restTemplate.exchange(API_BASE_URL + "accounts/balance/" + accountId,
+                    HttpMethod.GET, authEntity(), BigDecimal.class);
+            balance = response.getBody();
+        } catch(RestClientResponseException | ResourceAccessException e) {
+            System.out.println(e.getMessage());
+        }
+        return balance;
     }
 
     public void transfer(Transfer transfer) {
-        ResponseEntity<Void> response = restTemplate.exchange(API_BASE_URL + "transfer", HttpMethod.POST, makeTransferEntity(transfer),
-                Void.class);
+        try {
+            ResponseEntity<Void> response = restTemplate.exchange(API_BASE_URL + "transfer", HttpMethod.POST, makeTransferEntity(transfer),
+                    Void.class);
+        } catch(RestClientResponseException | ResourceAccessException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public List<Transfer> getTransferList(int accountId) {
-        ResponseEntity<Transfer[]> response = restTemplate.exchange(API_BASE_URL + "transfer/list/" + accountId,
-                HttpMethod.GET, authEntity(), Transfer[].class);
-        Transfer[] transferArray = response.getBody();
+        Transfer[] transferArray = null;
+        try {
+            ResponseEntity<Transfer[]> response = restTemplate.exchange(API_BASE_URL + "transfer/list/" + accountId,
+                    HttpMethod.GET, authEntity(), Transfer[].class);
+            transferArray = response.getBody();
+        } catch(RestClientResponseException | ResourceAccessException e) {
+            System.out.println(e.getMessage());
+        }
         return Arrays.asList(transferArray);
     }
 
     public List<Transfer> getPendingTransferList(int accountId) {
-        ResponseEntity<Transfer[]> response = restTemplate.exchange(API_BASE_URL + "transfers/pending/" + accountId,
-                HttpMethod.GET, authEntity(), Transfer[].class);
-        Transfer[] pendingTransfersArray = response.getBody();
+        Transfer[] pendingTransfersArray = null;
+        try {
+            ResponseEntity<Transfer[]> response = restTemplate.exchange(API_BASE_URL + "transfers/pending/" + accountId,
+                    HttpMethod.GET, authEntity(), Transfer[].class);
+            pendingTransfersArray = response.getBody();
+        } catch(RestClientResponseException | ResourceAccessException e) {
+            System.out.println(e.getMessage());
+        }
         return Arrays.asList(pendingTransfersArray);
     }
 
     public Transfer getTransferDetails(int transferId) {
-        ResponseEntity<Transfer> response = restTemplate.exchange(API_BASE_URL + "transfer/" + transferId, HttpMethod.GET,
-                authEntity(), Transfer.class);
-        return response.getBody();
+        Transfer transfer = new Transfer();
+        try {
+            ResponseEntity<Transfer> response = restTemplate.exchange(API_BASE_URL + "transfer/" + transferId, HttpMethod.GET,
+                    authEntity(), Transfer.class);
+            transfer = response.getBody();
+        } catch(RestClientResponseException | ResourceAccessException e) {
+            System.out.println(e.getMessage());
+        }
+        return transfer;
     }
 
     public List<User> getUserList(){
-        ResponseEntity<User[]> response = restTemplate.exchange(API_BASE_URL + "users", HttpMethod.GET, authEntity(),
-                User[].class);
-        User[] userArray = response.getBody();
+        User[] userArray = null;
+        try {
+            ResponseEntity<User[]> response = restTemplate.exchange(API_BASE_URL + "users", HttpMethod.GET, authEntity(),
+                    User[].class);
+            userArray = response.getBody();
+        } catch(RestClientResponseException | ResourceAccessException e) {
+            System.out.println(e.getMessage());
+        }
         return Arrays.asList(userArray);
     }
 
     public void respondToRequest(Transfer transfer) {
-        ResponseEntity<Void> response = restTemplate.exchange(API_BASE_URL + "transfer", HttpMethod.POST, makeTransferEntity(transfer),
-                Void.class);
+        try {
+            ResponseEntity<Void> response = restTemplate.exchange(API_BASE_URL + "transfer", HttpMethod.POST, makeTransferEntity(transfer),
+                    Void.class);
+
+        } catch(RestClientResponseException | ResourceAccessException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void makeTransferRequest(Transfer transfer) {
-        ResponseEntity<Void> response = restTemplate.exchange(API_BASE_URL + "transfer", HttpMethod.POST, makeTransferEntity(transfer),
-                Void.class);
+        try {
+            ResponseEntity<Void> response = restTemplate.exchange(API_BASE_URL + "transfer", HttpMethod.POST, makeTransferEntity(transfer),
+                    Void.class);
+        } catch(RestClientResponseException | ResourceAccessException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public String getTransferTypeDesc(int transferTypeId) {
-        ResponseEntity<String> response = restTemplate.exchange(API_BASE_URL + "transfer_type/" + transferTypeId,
-                HttpMethod.GET, authEntity(), String.class);
-        return response.getBody();
+        String transferTypeDesc = "";
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(API_BASE_URL + "transfer_type/" + transferTypeId,
+                    HttpMethod.GET, authEntity(), String.class);
+            transferTypeDesc = response.getBody();
+        } catch(RestClientResponseException | ResourceAccessException e) {
+            System.out.println(e.getMessage());
+        }
+        return transferTypeDesc;
     }
 
     public String getTransferStatusDesc(int transferStatusId){
-        ResponseEntity<String> response = restTemplate.exchange(API_BASE_URL + "transfer_status/" + transferStatusId,
-                HttpMethod.GET, authEntity(), String.class);
-        return response.getBody();
+        String transferStatusDesc = "";
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(API_BASE_URL + "transfer_status/" + transferStatusId,
+                    HttpMethod.GET, authEntity(), String.class);
+            transferStatusDesc = response.getBody();
+        } catch(RestClientResponseException | ResourceAccessException e) {
+            System.out.println(e.getMessage());
+        }
+        return transferStatusDesc;
     }
 
 
