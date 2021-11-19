@@ -3,6 +3,7 @@ package com.techelevator.tenmo.controller;
 import com.techelevator.tenmo.Service.TellerService;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.cache.SpringCacheBasedUserCache;
@@ -34,6 +35,7 @@ public class TenmoController {
         return tellerService.getBalance(accountId);
     }
 
+    @ResponseStatus(code = HttpStatus.CREATED)
     @RequestMapping(path = "transfer", method = RequestMethod.POST)
     public void transfer(@RequestBody Transfer transfer) {
         tellerService.transfer(transfer);
@@ -60,11 +62,13 @@ public class TenmoController {
         return tellerService.getUserList();
     }
 
+    @ResponseStatus(code = HttpStatus.CREATED)
     @RequestMapping(path = "transfer/respond", method = RequestMethod.POST)
     public void respondToRequest(@RequestBody Transfer transfer) {
         tellerService.respondToRequest(transfer);
     }
 
+    @ResponseStatus(code = HttpStatus.CREATED)
     @RequestMapping(path = "transfer/request", method = RequestMethod.POST)
     public void makeTransferRequest(@RequestBody Transfer transfer) {
         tellerService.makeTransferRequest(transfer);

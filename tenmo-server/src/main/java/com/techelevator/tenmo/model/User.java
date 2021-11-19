@@ -1,11 +1,13 @@
 package com.techelevator.tenmo.model;
 
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 public class User {
 
+   @NotNull(message = "id cannot be null")
    private Long id;
    private String username;
    private String password;

@@ -1,7 +1,10 @@
 package com.techelevator.tenmo.model;
 
+import javax.validation.constraints.NotNull;
+
 public class TransferStatus {
 
+    @NotNull(message = "transferStatusId cannot be null")
     private int transferStatusId;
     private String transferStatusDesc;
 
